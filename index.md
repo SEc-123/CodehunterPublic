@@ -1,14 +1,18 @@
-# Code Hunter 3.1.94
+# Code Hunter Documentation
 
-Start with the official visual tutorial on the Arvanta Cyber website:
+Choose your edition first:
 
-**[Open Code Hunter 3.1.94 Personal / Team tutorial](https://www.arvantacyber.com/code-hunter/docs/)**
+- [Get Started](docs/get-started.md)
+- [Personal](docs/personal/personal-get-started.md)
+- [Team](docs/team/team-get-started.md)
 
-The GitHub files below are the versioned source and evidence package behind that page:
+Then open a feature guide:
 
-- [Personal 3.1.94: complete, screenshot-backed workflow](docs/personal-usage-tutorial.md)
-- [Team 3.1.94: governance and remediation workflow](docs/team-usage-tutorial.md)
-- [Team developer tools 3.1.94](developer-tools/code-hunter-team/3.1.94/README.md)
-- [Offline tutorial mirror](docs/tutorial.html)
-
-Before copying a configuration, read the [version matrix](docs/version-matrix.md) and the [MCP guide](docs/external-apps-mcp.md). The screenshots in this release are English renderer captures from isolated demo data. Native IDE captures were not executed in this environment; the [evidence manifest](docs/assets/manifest-3.1.94.json) records both facts.
+- [Provider and license](docs/common-provider-and-license.md)
+- [Personal audit](docs/personal/personal-audit.md)
+- [Personal findings](docs/personal/personal-findings.md)
+- [Personal reports and fixes](docs/personal/personal-reports-and-fixes.md)
+- [Team project and code source](docs/team/team-project-and-code-source.md)
+- [Team SCA and release gate](docs/team/team-sca-and-release-gate.md)
+- [Team remediation and verification](docs/team/team-remediation-and-verification.md)
+- [Common troubleshooting](docs/common-troubleshooting.md)

@@ -1,0 +1,19 @@
+{
+  "purpose": "Public screenshots used by the Code Hunter user guide",
+  "capture_policy": "Only isolated desktop renderer captures are listed. Native IDE screenshots are not represented as completed evidence.",
+  "assets": [
+    {"edition": "personal", "file": "personal/personal-get-started.png", "feature": "get-started", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "personal", "file": "personal/personal-provider.png", "feature": "provider", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "personal", "file": "personal/personal-audit.png", "feature": "audit", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "personal", "file": "personal/personal-findings.png", "feature": "findings", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "personal", "file": "personal/personal-reports-and-fixes.png", "feature": "reports-and-fixes", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "personal", "file": "personal/personal-mcp.png", "feature": "mcp", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/team-get-started.png", "feature": "get-started", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/team-project-and-code-source.png", "feature": "project-and-code-source", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/team-baseline-and-iteration.png", "feature": "baseline-and-iteration", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/team-analysis-and-findings.png", "feature": "analysis-and-findings", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/team-sca-and-release-gate.png", "feature": "sca-and-release-gate", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/team-remediation-and-verification.png", "feature": "remediation-and-verification", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/team-mcp.png", "feature": "mcp", "capture_method": "isolated Electron renderer", "redaction_status": "checked"}
+  ]
+}
