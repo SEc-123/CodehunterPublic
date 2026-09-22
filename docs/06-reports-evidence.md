@@ -19,7 +19,7 @@ A defensible finding should connect:
 
 Personal reports are generated from reviewed findings.
 
-Example: [Code Hunter 3.1.75 Personal audit report](examples/codehunter-3.1.75-personal-audit-report.md).
+Use the current screenshot-backed Personal and Team tutorials for the report path. Historical customer-style report archives are intentionally not included in this public repository.
 
 Typical contents:
 
