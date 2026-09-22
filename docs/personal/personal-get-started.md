@@ -26,7 +26,10 @@ The License page shows the current Personal access state. A development activati
 
 If the access state does not change, return to the desktop app, refresh the License page, and confirm that the installed app is the Personal edition.
 
-## Next
+## Feature guides
 
 - [Configure a provider](personal-provider.md)
 - [Import a project and run an audit](personal-audit.md)
+- [Review findings and evidence](personal-findings.md)
+- [Create reports and fix packages](personal-reports-and-fixes.md)
+- [Connect Personal MCP](personal-mcp.md)

@@ -1,18 +1,12 @@
 # Code Hunter Documentation
 
-Choose your edition first:
+Choose the product you use, then open the feature guide for the task you want to complete.
+
+## Documentation
 
 - [Get Started](docs/get-started.md)
 - [Personal](docs/personal/personal-get-started.md)
 - [Team](docs/team/team-get-started.md)
-
-Then open a feature guide:
-
-- [Provider and license](docs/common-provider-and-license.md)
-- [Personal audit](docs/personal/personal-audit.md)
-- [Personal findings](docs/personal/personal-findings.md)
-- [Personal reports and fixes](docs/personal/personal-reports-and-fixes.md)
-- [Team project and code source](docs/team/team-project-and-code-source.md)
-- [Team SCA and release gate](docs/team/team-sca-and-release-gate.md)
-- [Team remediation and verification](docs/team/team-remediation-and-verification.md)
-- [Common troubleshooting](docs/common-troubleshooting.md)
+- [Provider and License](docs/common-provider-and-license.md)
+- [Troubleshooting](docs/common-troubleshooting.md)
+- [Security](SECURITY.md)
