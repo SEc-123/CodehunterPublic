@@ -12,16 +12,18 @@ Screenshots show the product workflow. Production activation and account entitle
 | 2 | [Add members and roles](#workspace-and-roles) | Required for collaboration | Reviewer, owner, developer, and remediation responsibilities are assigned |
 | 3 | [Configure and test a provider](#provider) | Required for AI-assisted stages | The default provider test succeeds |
 | 4 | [Create a project and connect code](#project-and-code-source) | Required | The SCM or local source test succeeds and the intended revision is selected |
-| 5 | [Initialize the baseline](#baseline-and-iteration) | Required | The project has a materialized starting state |
-| 6 | [Create an iteration and bind work](#baseline-and-iteration) | Required | Requirements and code changes point to the intended revision |
-| 7 | [Run requirement, change, risk, and finding analysis](#analysis-and-findings) | Required | Reviewable iteration findings are available |
-| 8 | [Import external SAST/SARIF](#analysis-and-findings) | Optional | External findings are normalized and reviewed |
-| 9 | [Run SCA](#sca-and-release-gate) | Required when workspace policy enables dependency gates | Components, advisories, licenses, and exceptions are evaluated |
-| 10 | [Assign findings and create remediation tasks](#remediation-and-verification) | Required for closure | Each accepted issue has an owner and acceptance criteria |
-| 11 | [Use desktop, Developer Agent CLI, or IDE Inbox](#developer-tools) | Optional execution surface | A claimed task produces a reviewed patch or PR/MR |
-| 12 | [Bind CI evidence and verify the fix](#remediation-and-verification) | Required for verified closure | Evidence matches the submitted commit and verification completes |
-| 13 | [Decide release readiness and promote the baseline](#release-readiness) | Required for the governed release loop | The release has a recorded state and the accepted release becomes the next baseline |
-| 14 | [Connect Team MCP](#team-mcp) | Optional | A scoped member/project connection can submit reviewable requests |
+| 5 | [Configure project connectors](#team-connectors) | Conditional | Required external requirement, CI, or notification connections pass a real test |
+| 6 | [Initialize the baseline](#baseline-and-iteration) | Required | The project has a materialized starting state |
+| 7 | [Create an iteration and bind work](#baseline-and-iteration) | Required | Requirements and code changes point to the intended revision |
+| 8 | [Import and review requirements](#requirements) | Required when the delivery has requirement input | Requirement Sources become reviewed, traceable requirements |
+| 9 | [Run requirement, change, risk, and Finding analysis](#analysis-and-findings) | Required | Reviewable iteration Findings are available |
+| 10 | [Import external SAST/SARIF](#analysis-and-findings) | Optional | External Findings are normalized and reviewed |
+| 11 | [Run SCA](#sca-and-release-gate) | Conditional on dependency or license policy | Components, advisories, licenses, and exceptions are evaluated |
+| 12 | [Assign Findings and create remediation tasks](#remediation-and-verification) | Required for closure | Each accepted issue has an Owner and acceptance criteria |
+| 13 | [Use desktop, Developer Agent CLI, or IDE Inbox](#developer-tools) | Optional execution surface | A claimed task produces a reviewed patch or PR/MR |
+| 14 | [Bind CI evidence and verify the fix](#remediation-and-verification) | Required for verified closure | Evidence matches the submitted commit and verification completes |
+| 15 | [Decide release readiness and promote the baseline](#release-readiness) | Required for the governed release loop | The release has a recorded state and the accepted release becomes the next Baseline |
+| 16 | [Connect Team MCP](#team-mcp) | Optional | A scoped member/project connection can submit reviewable requests |
 
 <a id="get-started"></a>
 ## Step 1 — Download, activate, and enter Team
@@ -67,18 +69,42 @@ Screenshots show the product workflow. Production activation and account entitle
 <a id="provider"></a>
 ## Step 3 — Configure the Team provider
 
-**What this stage does:** supplies the model used by requirement extraction, impact analysis, security analysis, finding review, report analysis, and remediation assistance.
+**Purpose:** supply the model used by Requirement Extraction, impact analysis, security analysis, Finding review, report analysis, and remediation assistance.
 
-1. Open **Settings → Providers**.
-2. Choose the provider preset.
-3. Enter the Base URL, model, and protected API credential.
+1. Open **Settings → AI Provider**.
+2. Choose the provider preset and confirm the API type.
+3. Enter the Base URL, exact model, and protected API credential.
 4. Save and test the provider.
 5. Set it as default after the test succeeds.
-6. Reopen it and confirm that the non-secret settings persisted.
+6. Add tested profiles to the ordered Auditor roster when using cross-model assurance.
+7. Set a tested profile as Reviewer.
+8. Reopen the page and confirm that the non-secret settings, roster, and Reviewer persisted.
 
 **Result:** Team analysis stages can select a tested provider.
 
-**If it fails:** check the Base URL, exact model name, credential, and network access. Provider credentials do not grant workspace membership or Developer Agent enrollment.
+**If it fails:** check the Base URL, exact model name, API type, credential, and network access. Provider credentials do not grant workspace membership or Developer Agent enrollment.
+
+### Team model roles and execution order
+
+| Term | Meaning |
+| --- | --- |
+| **Default provider** | The primary model used by normal single-model stages |
+| **Auditor** | Produces an independent candidate result in cross-model stages |
+| **Reviewer** | Merges candidates, resolves disagreements, and produces the final contract |
+| **Workflow default** | Leaves Audit depth unset in the current launch form so the Team workflow uses its configured default |
+| **Model assurance** | Controls which stages require model candidates and Reviewer adjudication |
+| **Security Reviewer / Project Owner** | Human governance roles; they do not replace the model Reviewer |
+
+| Model assurance | Team behavior |
+| --- | --- |
+| **Single model** | Uses the primary model unless a governed Team workflow explicitly requires a review policy |
+| **Standard assurance** | Adds Reviewer assurance to final Finding and Fix Package stages |
+| **Risk assurance** | Adds cross-model candidates and consensus to risk and Finding stages |
+| **Full cross-model deep audit** | Uses candidates and Reviewer consensus at every contract stage |
+
+Reasoning effort controls a compatible model call, Audit depth controls extra refinement and reverse-coverage passes, and Model assurance controls model roles and consensus. Team workflows can require Reviewer or consensus checks for governed stages. Auditors run in roster order, and Team analysis stages run as a queue. Neither surface is presented as user-controlled parallel execution.
+
+Use different tested models or providers when independent cross-model coverage matters. A provider can be saved and tested without being the default provider, an Auditor, or the Reviewer.
 
 <a id="project-and-code-source"></a>
 ## Step 4 — Create a Team project and connect source code
@@ -105,10 +131,51 @@ Screenshots show the product workflow. Production activation and account entitle
 
 **If it fails:** a repository URL belongs in the Code Source. The revision field must contain a branch, tag, or commit that the repository can resolve. When connection succeeds but no refs appear, check repository permissions and the default branch.
 
+<a id="team-object-map"></a>
+### Understand Team objects before adding integrations
+
+| Object | Purpose |
+| --- | --- |
+| **Workspace** | Governance boundary for members, roles, and multiple Team Projects |
+| **Team Project** | Security-governance unit for one product or code asset |
+| **SCM Profile** | Authentication configuration for GitHub, GitLab, or Bitbucket |
+| **Code Source** | The actual local or remote repository and its materializable branch, tag, commit, or PR/MR |
+| **Connector** | Project-scoped connection to a requirement system, CI service, or notification platform |
+| **Developer Agent** | Local worker that claims and executes remediation tasks inside an enrolled repository |
+| **MCP** | Local STDIO bridge that lets an authorized editor or assistant read context and submit controlled requests |
+
+An SCM Profile authenticates to a Git service; a Code Source identifies the repository and revision. A Connector imports requirements, gathers CI evidence, or sends notifications; it does not replace a Code Source. A Developer Agent executes bounded remediation work, while MCP exposes approved context and request actions. Their credentials and permissions are separate.
+
+<a id="team-connectors"></a>
+## Conditional — Configure Team Connectors
+
+Configure only the connector categories used by the Team Project.
+
+| Category | Supported providers | Used for |
+| --- | --- | --- |
+| **Requirement** | Jira, Confluence, Meegle, CODING, TAPD, DingTalk | Import requirement material into an Iteration |
+| **CI** | GitHub Actions, GitLab CI, Jenkins | Fetch source-bound test and verification evidence |
+| **Collaboration** | Slack, Microsoft Teams, Lark | Send governed workflow notifications |
+
+Connectors support Basic, Bearer, or Webhook authentication according to provider. Their visible state is Active, Disabled, or Failed. **Test connection** performs a real remote request; it is not only a local form check.
+
+1. Open the Team Project configuration and expand **Project integrations and CI**.
+2. Choose **Add connector**.
+3. Select the Team Project and provider kind.
+4. Enter the display name, Base URL, and supported authentication mode.
+5. Enter the provider-specific default project, space, channel, repository, workflow, or job.
+6. Save the connector.
+7. Choose **Test connection**.
+8. Confirm that the latest test succeeds and the connector is Active.
+
+Never place a Connector token or Webhook URL in documentation, screenshots, logs, or source control.
+
 <a id="baseline-and-iteration"></a>
 ## Step 5 — Initialize the baseline
 
-**What this stage does:** records the accepted starting state that later iterations compare against.
+A **Baseline** is the accepted code revision together with its security analysis and governance state. Later Iterations compare delivery work against this starting point.
+
+Example: product release 1.8 is accepted on `main` at commit `abc123`. Team initializes `main@abc123` as the Baseline. A later review asks what changed relative to that accepted revision instead of treating the repository as an unknown project.
 
 1. Open **Baseline** for the Team project.
 2. Select the tested Code Source.
@@ -120,13 +187,15 @@ Screenshots show the product workflow. Production activation and account entitle
 
 ![Team baseline and iteration](assets/team/team-baseline-and-iteration.png)
 
-**Result:** the project has a baseline tied to a resolvable source revision.
+**Result:** the project has a Baseline tied to a resolvable source revision.
 
-**If it fails:** retest the Code Source and verify the exact branch or commit. Do not enter a repository URL as the revision.
+**If it fails:** retest the Code Source and verify the exact branch or commit. The repository URL belongs in Code Source; the Baseline revision must resolve to a real branch, tag, or commit.
 
 ## Step 6 — Create an iteration and bind requirements and changes
 
-**What this stage does:** defines the unit of delivery that will move through analysis, remediation, verification, and release readiness.
+An **Iteration** is one delivery unit created from a Baseline. It binds Requirement Sources, a Change Set, Findings, remediation tasks, verification evidence, and the release decision.
+
+Example: `REQ-204` adds refund approval. The developer submits PR `#52` at commit `def456`. Create an Iteration from Baseline `abc123`, then bind the requirement, PR, and `abc123..def456` change before analysis.
 
 1. Open **Iterations** and choose **New iteration**.
 2. Select the Team project and baseline.
@@ -139,27 +208,71 @@ Screenshots show the product workflow. Production activation and account entitle
 
 **Result:** the iteration contains the requirement and source change that the team intends to release.
 
-<a id="analysis-and-findings"></a>
-## Step 7 — Run requirement, impact, risk, and finding analysis
+A **Change Set** is the specific source delta inside the Iteration. Creating an Iteration does not replace or promote the Baseline. After an accepted release, **Fresh Baseline Promotion** is the separate action that makes the released revision the next comparison point.
 
-**What this stage does:** turns the iteration inputs into security context and reviewable findings.
+<a id="requirements"></a>
+## Step 7 — Import, extract, and review requirements
+
+A **Requirement Source** is the raw input captured for an Iteration. It can be manual text, Markdown, TXT, JSON, CSV, or content imported through a configured requirement Connector. **Requirement Extraction** turns those raw sources into structured, traceable records for human review.
+
+### Import Requirement Sources
+
+1. Open the Iteration and select **Requirements**.
+2. Add a manual source or choose an enabled Connector.
+3. For Jira, enter the intended JQL query.
+4. For Confluence, enter the page IDs and choose whether direct children are included.
+5. For Meegle, CODING, TAPD, or DingTalk, enter the provider-specific project and object filters.
+6. Preview the source count and query scope.
+7. Import the material.
+8. Open the raw preview and confirm that the intended objects were captured.
+
+Imported sources keep their source type, external references, raw content path, and content hash in the Iteration workspace.
+
+### Run Requirement Extraction and human review
+
+1. Start **Requirement extraction**.
+2. Review the structured records.
+3. Check Requirement ID, type, title, summary, Owner, priority, and Acceptance Criteria.
+4. Review authentication, authorization, external input, sensitive data, state change, token or secret, and notification security flags.
+5. Check Confidence and the quoted source evidence.
+6. Resolve duplicate, ambiguous, or uncertain items.
+7. Edit, approve, reject, mark as not a requirement, merge, or split each record.
+8. Save the reviewed requirement set before running impact analysis.
+
+| Review state | Meaning |
+| --- | --- |
+| **Pending review** | Extracted but not yet decided by a person |
+| **Approved** | Accepted as a requirement for this Iteration |
+| **Needs edit** | Requires correction before approval |
+| **Rejected** | Not accepted for this Iteration |
+| **Not a requirement** | The imported item is not a product requirement |
+| **Merged** | Combined into another requirement |
+| **Split** | Divided into separate requirements |
+
+Requirement Extraction must preserve ambiguity and uncertainty when the source does not support a definite fact. Human review, not model inference alone, advances the requirement set.
+
+<a id="analysis-and-findings"></a>
+## Step 8 — Run requirement, impact, risk, and Finding analysis
+
+The following stages turn reviewed requirements and the Change Set into security context and reviewable Findings:
 
 Run the stages in this order:
 
-1. **Requirement extraction** — structure the requirement material.
-2. **Requirement impact analysis** — identify affected modules, data, permissions, and controls.
-3. **Security analysis / owner review** — confirm the security expectations.
-4. **Change impact** — understand what the code change touches.
-5. **Delta generic risk** — identify security risk introduced or changed by the iteration.
-6. **Delta business risk** — identify risks in business state, money, approval, tenant, identity, or other sensitive flows.
-7. **Delta finding review** — prepare the findings for human review.
-8. Open the Findings workbench and inspect source, affected area, evidence, product impact, and current state.
-9. Accept, reject, downgrade, defer, or request more evidence.
-10. Assign an Owner to every accepted finding that requires work.
+1. **Requirement Impact** maps requirements to affected features, modules, data, permissions, controls, and responsible Owners.
+2. **Security Analysis** identifies security expectations and risks in the requirements.
+3. **Control Owner Review** lets the responsible person confirm the expected control and decision.
+4. **Gate Policy** turns reviewed requirements, approvals, Findings, and evidence into release conditions.
+5. **Change Impact** identifies what the code change touches.
+6. **Delta Generic Risk** finds general security risk introduced or changed by the Iteration.
+7. **Delta Business Risk** evaluates money, state, approval, tenant, identity, and other business-sensitive flows.
+8. **Delta Finding Review** turns the delta analysis into Findings ready for human review.
+9. Open the Findings workbench and inspect source, affected area, evidence, product impact, and current state.
+10. Accept, reject, downgrade, defer, or request more evidence.
+11. Assign an Owner to every accepted Finding that requires work.
 
 ![Team analysis and findings](assets/team/team-analysis-and-findings.png)
 
-**Result:** the iteration has findings tied to source, change context, evidence, product impact, and an accountable owner.
+**Result:** the Iteration has Findings tied to Requirement Sources, code change, evidence, product impact, and an accountable Owner.
 
 ### Optional at this stage — Import external SAST or SARIF
 
@@ -169,15 +282,27 @@ Run the stages in this order:
 4. Bind the report to the Team project, branch, commit, scanner, and report date.
 5. Import the report.
 6. Run external report analysis.
-7. Review normalized findings.
-8. Let the responsible owner decide which items enter the governed finding lifecycle.
+7. Review normalized Findings.
+8. Let the responsible Owner decide which items enter the governed Finding lifecycle.
 
 **If the report is empty:** check its format, project binding, commit, scanner metadata, and report date before importing again.
 
+A **Normalized Finding** is an external result converted into Team's common lifecycle so it can be assigned, remediated, verified, and governed like a native Finding.
+
 <a id="sca-and-release-gate"></a>
-## Step 8 — Run SCA and resolve dependency policy
+## Step 9 — Run SCA and resolve dependency policy
 
 SCA is a Team capability. Run it before release readiness whenever the workspace policy includes dependency or license gates.
+
+| Term | Meaning |
+| --- | --- |
+| **SAST / SARIF** | External scanner results about source-code issues |
+| **SCA** | Analysis of dependency components, vulnerabilities, licenses, fixed versions, and lifecycle state |
+| **Advisory** | A published security notice that affects a component version |
+| **Exploitability / Reachability** | Whether the vulnerable behavior can be reached or used in the current product |
+| **VEX** | A structured statement about whether a component vulnerability affects this product |
+| **Exception** | A temporary policy exception with Owner, reason, scope, approval, and expiry |
+| **Release Gate** | The decision produced from Findings, SCA, verification, approvals, and evidence |
 
 1. Open the iteration SCA panel.
 2. Select the dependency source or lockfile context.
@@ -196,10 +321,22 @@ SCA is a Team capability. Run it before release readiness whenever the workspace
 
 **If it remains blocked:** check for an expired exception, missing Owner, missing approval, unverified fixed version, prohibited license, or unresolved exploitability condition.
 
-<a id="remediation-and-verification"></a>
-## Step 9 — Create and assign remediation work
+A VEX record or Exception does not delete the Finding. An expired or incomplete Exception can block the Gate again. After upgrading or replacing a dependency, run a new scan; an older SCA snapshot does not prove the new source is clean.
 
-**What this stage does:** converts an accepted finding into work that a developer can claim and that a reviewer can verify.
+<a id="remediation-and-verification"></a>
+## Step 10 — Create and assign remediation work
+
+This stage converts an accepted Finding into governed work that a developer can claim and a reviewer can verify.
+
+| Term | Meaning |
+| --- | --- |
+| **Remediation Task** | Governed repair work created from a confirmed Finding |
+| **Acceptance Criteria** | The control that must be restored and the test result required for closure |
+| **Remediation Context Pack** | Finding, evidence, source scope, assumptions, and Acceptance Criteria supplied to the developer |
+| **Local Fix Package** | Bounded repair material; generation does not apply or verify the patch |
+| **CI Evidence** | Test or pipeline evidence tied to the exact repository, commit SHA, and current attempt |
+| **Fix Verification** | Independent check of the submitted code, criteria, and current evidence |
+| **Stale Evidence** | Evidence from an older commit, patch, or verification attempt |
 
 1. Open the accepted finding.
 2. Choose **New remediation task**.
@@ -221,7 +358,7 @@ SCA is a Team capability. Run it before release readiness whenever the workspace
 **Result:** the task has an owner, acceptance criteria, source context, and a selected delivery path.
 
 <a id="developer-tools"></a>
-## Step 10 — Optional Developer Agent, CLI, IDE, and project sub-agents
+## Step 11 — Optional Developer Agent, CLI, IDE, and project sub-agents
 
 Developer tools are optional execution surfaces inside the remediation stage. The Team desktop remains authoritative for workspace roles, risk acceptance, fix verification, release readiness, and baseline promotion.
 
@@ -352,7 +489,7 @@ No IDE screenshot is shown here because a native VS Code or JetBrains capture wa
 - Patch application, tests, commits, and PR creation require developer review and can require confirmation.
 - The Team desktop and server remain authoritative for owner approval, accepted risk, fix verification, release readiness, and baseline promotion.
 
-## Step 11 — Apply the fix, run tests, and bind CI evidence
+## Step 12 — Apply the fix, run tests, and bind CI evidence
 
 1. Review the current source worktree and exact target commit.
 2. Preview the patch, test command, rollback path, and assumptions.
@@ -367,7 +504,7 @@ No IDE screenshot is shown here because a native VS Code or JetBrains capture wa
 
 **If evidence is rejected:** bind it to the exact submitted commit and rerun the current verification attempt. Evidence from an older patch or another revision is stale.
 
-## Step 12 — Run formal fix verification
+## Step 13 — Run formal fix verification
 
 1. Open the remediation task.
 2. Confirm the acceptance criteria.
@@ -382,7 +519,7 @@ No IDE screenshot is shown here because a native VS Code or JetBrains capture wa
 **Result:** closure is tied to the current source attempt, reviewer decision, and evidence.
 
 <a id="release-readiness"></a>
-## Step 13 — Decide release readiness and promote a fresh baseline
+## Step 14 — Decide release readiness and promote a fresh baseline
 
 1. Open **Release Readiness**.
 2. Review the current state:
@@ -400,7 +537,9 @@ No IDE screenshot is shown here because a native VS Code or JetBrains capture wa
 <a id="team-mcp"></a>
 ## Optional — Connect Team MCP
 
-Use Team MCP only after the workspace, members, project, and permission boundaries exist.
+Team MCP is a local STDIO bridge exposed by the running Team desktop. Use it only after workspace, member, project, and permission boundaries exist.
+
+Example: a Jira Connector imports `REQ-204` into an Iteration. A Developer Agent claims its remediation task in an enrolled repository. Team MCP lets an authorized external assistant read that task context and submit a verification request that still waits for desktop review.
 
 1. Keep the matching Team desktop instance running.
 2. Open **Settings → External Apps / MCP**.
@@ -415,12 +554,12 @@ Use Team MCP only after the workspace, members, project, and permission boundari
 11. Submit analysis, report, repair, or verification requests when permitted.
 12. Review the request preview in Team desktop.
 13. Confirm or cancel the request.
-14. Check the idempotency key and request history.
+14. Check the idempotency key and request history. The idempotency key prevents the same external work request from being executed twice.
 15. Revoke and recreate the connection when its scope changes.
 
 ![Team MCP configuration](assets/team/team-mcp.png)
 
-**Boundary:** Team MCP does not automatically import arbitrary projects, execute arbitrary commands, accept risk, approve a release, or promote a baseline. A Team connection cannot be used with Personal desktop.
+**Boundary:** Team MCP does not automatically import arbitrary projects, execute arbitrary commands, accept risk, approve a release, or promote a Baseline. A Team connection cannot be used with Personal desktop. Connector credentials, Developer Agent tokens, model Provider credentials, and MCP connection secrets are separate.
 
 <a id="troubleshooting"></a>
 ## Troubleshooting by stage
