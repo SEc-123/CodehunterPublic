@@ -95,6 +95,8 @@ Screenshots show the product workflow. Production activation and account entitle
 | **Model assurance** | Controls which stages require model candidates and Reviewer adjudication |
 | **Security Reviewer / Project Owner** | Human governance roles; they do not replace the model Reviewer |
 
+### Model assurance choices
+
 | Model assurance | Team behavior |
 | --- | --- |
 | **Single model** | Uses the primary model unless a governed Team workflow explicitly requires a review policy |
