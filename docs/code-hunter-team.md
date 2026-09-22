@@ -241,7 +241,11 @@ A Developer Agent can receive tasks, claim work, obtain fix context, preview or 
 | JetBrains plugin | CodeHunter Remediation Inbox tool window |
 | `.codehunter/team-agent.toml` | Repository-scoped enrollment and endpoint configuration |
 
-The IDE packages include the Team Agent and Team Agent LSP for supported platforms. Obtain the package from the official distribution channel provided by your Team administrator. Large plugin binaries are not stored in this documentation repository.
+The IDE packages include the Team Agent and Team Agent LSP for supported platforms. The current verified packages are stored in this repository:
+
+- [Download the VS Code extension (VSIX)](../developer-tools/code-hunter-team/3.1.94/plugins/vscode/codehunter-team-vscode-3.1.94.vsix)
+- [Download the JetBrains plugin (ZIP)](../developer-tools/code-hunter-team/3.1.94/plugins/jetbrains/codehunter-team-jetbrains-3.1.94.zip)
+- [Read package checksums, supported platforms, and installation notes](../developer-tools/code-hunter-team/3.1.94/README.md)
 
 ### Enroll a repository
 
@@ -321,7 +325,7 @@ The CLI enforces the enrolled repository boundary, patch checks, local command a
 
 ### VS Code flow
 
-1. Install the Team extension package supplied by the official distribution channel.
+1. Download and install the [Team VS Code extension](../developer-tools/code-hunter-team/3.1.94/plugins/vscode/codehunter-team-vscode-3.1.94.vsix).
 2. Open the CodeHunter activity bar.
 3. Open **CodeHunter Remediation Inbox**.
 4. Use **CodeHunter: Configure Agent** when the config or binary path is not detected automatically.
@@ -332,7 +336,7 @@ The CLI enforces the enrolled repository boundary, patch checks, local command a
 
 ### JetBrains flow
 
-1. Install the Team plugin package supplied by the official distribution channel.
+1. Download and install the [Team JetBrains plugin](../developer-tools/code-hunter-team/3.1.94/plugins/jetbrains/codehunter-team-jetbrains-3.1.94.zip).
 2. Restart the IDE when requested.
 3. Open **View → Tool Windows → CodeHunter Remediation Inbox**.
 4. Configure the Agent config, Agent binary, LSP binary, API override, and default test command only when automatic discovery is not sufficient.
