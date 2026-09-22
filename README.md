@@ -1,12 +1,12 @@
 # Code Hunter Documentation
 
-Choose the product you use, then open the feature guide for the task you want to complete.
+Choose the product you use. Each guide follows the complete workflow from download and activation to review, remediation, verification, and optional integrations.
 
-## Documentation
+- [Code Hunter Personal — complete user guide](docs/code-hunter-personal.md)
+- [Code Hunter Team — complete user guide](docs/code-hunter-team.md)
 
-- [Get Started](docs/get-started.md)
-- [Personal](docs/personal/personal-get-started.md)
-- [Team](docs/team/team-get-started.md)
-- [Provider and License](docs/common-provider-and-license.md)
-- [Troubleshooting](docs/common-troubleshooting.md)
-- [Security](SECURITY.md)
+The Team guide includes Workspace, SCM, Baseline, Iteration, SAST/SARIF, SCA, Release Gate, Remediation, Developer Agent, CLI, VS Code, JetBrains, fix verification, and Team MCP.
+
+Large IDE packages and desktop installers are distributed through official product channels and are not stored in this documentation repository.
+
+- [Security policy](SECURITY.md)
