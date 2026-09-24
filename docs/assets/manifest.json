@@ -1,6 +1,6 @@
 {
   "purpose": "Public screenshots used by the Code Hunter user guide",
-  "capture_policy": "Only isolated desktop renderer captures are listed. Native IDE screenshots are not represented as completed evidence.",
+  "capture_policy": "Only real desktop renderer captures are listed. Current fine-grained Team captures use the running Electron renderer through CDP; native IDE screenshots are not represented as completed evidence.",
   "assets": [
     {"edition": "personal", "file": "personal/personal-get-started.png", "feature": "get-started", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
     {"edition": "personal", "file": "personal/personal-provider.png", "feature": "provider", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
@@ -14,6 +14,20 @@
     {"edition": "team", "file": "team/team-analysis-and-findings.png", "feature": "analysis-and-findings", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
     {"edition": "team", "file": "team/team-sca-and-release-gate.png", "feature": "sca-and-release-gate", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
     {"edition": "team", "file": "team/team-remediation-and-verification.png", "feature": "remediation-and-verification", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
-    {"edition": "team", "file": "team/team-mcp.png", "feature": "mcp", "capture_method": "isolated Electron renderer", "redaction_status": "checked"}
+    {"edition": "team", "file": "team/team-mcp.png", "feature": "mcp", "capture_method": "isolated Electron renderer", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-project-overview.png", "feature": "project-overview", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-project-configuration.png", "feature": "project-configuration-repository", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-project-connectors.png", "feature": "project-configuration-connectors", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-project-agents.png", "feature": "project-configuration-agents", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-project-default-operator.png", "feature": "project-configuration-default-operator", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-project-analysis-defaults.png", "feature": "project-configuration-analysis-defaults", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-policy-center.png", "feature": "policy-center", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-analysis-center.png", "feature": "analysis-center-current-progress", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-analysis-new-analysis.png", "feature": "analysis-new-analysis", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-analysis-inputs.png", "feature": "analysis-inputs", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-analysis-requirement-review.png", "feature": "analysis-requirement-review", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-analysis-sca.png", "feature": "analysis-sca", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-analysis-history.png", "feature": "analysis-history", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"},
+    {"edition": "team", "file": "team/fine-grained/team-iteration-create.png", "feature": "iteration-create-gate", "language": "zh-CN", "capture_method": "Electron renderer via current running app CDP", "redaction_status": "checked"}
   ]
 }

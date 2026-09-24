@@ -4,6 +4,8 @@ This guide follows the Team delivery path from installation to a governed releas
 
 Screenshots show the product workflow. Production activation and account entitlement are handled by the official service.
 
+The fine-grained screenshots in the configuration and Analysis Center sections are real Electron renderer captures from a test workspace. Their labels follow the locale active during capture; they document the available controls and state transitions, not production entitlement, native IDE behavior, or a successful release decision.
+
 ## Workflow at a glance
 
 | Order | Stage | Required? | Completion signal |
@@ -133,6 +135,132 @@ Use different tested models or providers when independent cross-model coverage m
 
 **If it fails:** a repository URL belongs in the Code Source. The revision field must contain a branch, tag, or commit that the repository can resolve. When connection succeeds but no refs appear, check repository permissions and the default branch.
 
+### Team setup order inside a project
+
+Complete the project configuration in this order before starting the first analysis:
+
+1. Open **Project Overview** and confirm the selected project, branch, current Baseline, and current Iteration.
+2. Open **Project Configuration → Repository** and verify the source and revision.
+3. Open **Project Configuration → Requirements / CI connectors** and add only the integrations required by this project.
+4. Open **Project Configuration → Developer & Agent** when developers will receive governed remediation tasks.
+5. Open **Project Configuration → Default operator** and set the person whose identity should be prefilled for review decisions.
+6. Open **Project Configuration → Analysis defaults** and review the defaults used by each Team analysis type.
+7. Open **Policy Center** and verify the release gates, test allowlist, and forbidden command patterns.
+8. Enter **Analysis Center** and create the Baseline, Iteration, SCA, external-report, requirement, or verification run that matches the work.
+
+The controls are intentionally ordered this way: analysis reads the project source and policy, and an Iteration cannot be created until a ready Baseline exists.
+
+### Step 4A — Open Project Overview
+
+**What this page does:** shows the selected Team Project, its active branch, current Baseline, current analysis, input material, and the readiness cards that lead to configuration or analysis.
+
+![Team Project Overview](assets/team/fine-grained/team-project-overview.png)
+
+1. Choose the project from the selector at the top of the page.
+2. Confirm the code repository card shows the intended source and branch.
+3. Check the **Baseline**, **Input materials**, **AI analysis**, **Finding review**, **Remediation**, and **Report** cards.
+4. Use **Project Configuration** to complete project-scoped setup, **Policy Center** to inspect gates, or **Enter Analysis Center** to run a workflow.
+
+**Result:** you know which project and revision the next operation will affect. Cards marked `not configured`, `0`, or `none` are setup state, not a completed release decision.
+
+**Common issue:** if the overview shows a different project or branch, change the project selector before opening any configuration drawer.
+
+### Step 4B — Configure the repository
+
+Open **Project Overview → Project Configuration → Repository**. This tab separates the repository connection from the revision used by an analysis.
+
+![Team repository configuration](assets/team/fine-grained/team-project-configuration.png)
+
+1. Use **Select local repository** for a local Git checkout, or **Connect remote repository** for a supported remote source.
+2. For a private source, configure its SCM credentials in the protected credential flow. Do not paste credentials into a project name, revision, screenshot, or Markdown file.
+3. Confirm the source row shows the expected type, default branch, active state, and last verification time.
+4. Choose **Test connection** and wait for the result before selecting a Baseline or Iteration revision.
+
+**Result:** the project can resolve the repository and its branch or commit. A repository URL identifies the source; a branch, tag, or commit identifies the revision.
+
+**Common issue:** a successful connection with no refs usually means the SCM identity cannot read the repository or the default branch is wrong.
+
+### Step 4C — Configure requirements and CI connectors
+
+Open **Project Configuration → Requirements / CI connectors**. Requirement connectors provide input for an Iteration; CI connectors provide evidence for remediation and release readiness.
+
+![Team requirements and CI connectors](assets/team/fine-grained/team-project-connectors.png)
+
+The current page lists requirement providers such as Jira, Confluence, TAPD, Meegle, CODING, and DingTalk, and CI providers such as GitHub Actions, GitLab CI, and Jenkins. Configure a connector only when the project uses that system.
+
+1. Choose **New connector**.
+2. Select the provider kind and enter a display name and Base URL.
+3. Select the supported authentication method, then enter the provider-specific project, space, channel, repository, workflow, or job defaults.
+4. Save the connector and choose **Test connection**. The test performs a remote request; it is not just a local field check.
+5. Confirm the status is Active before importing requirements or CI evidence.
+
+**Result:** an Iteration can import the intended requirement objects, and later verification can look up evidence for the correct repository and workflow.
+
+**Common issue:** a connector may be saved but still unusable when its remote project scope is empty or its status is Failed. Never publish tokens or webhook URLs in screenshots or logs.
+
+### Step 4D — Configure Developer & Agent
+
+Open **Project Configuration → Developer & Agent** when the project will delegate remediation work to a local worker.
+
+![Team Developer Agent project configuration](assets/team/fine-grained/team-project-agents.png)
+
+1. Choose **Invite Developer Agent**.
+2. Create a one-time enrollment code in the Team desktop and give it only to the intended developer.
+3. Enroll the local CLI from the bound repository and verify that `.codehunter/team-agent.toml` is created locally.
+4. Return to this tab and refresh until the Agent is online and scoped to the intended project and repository.
+
+**Result:** the Agent can receive assigned remediation tasks for this project. It is a local worker, not a Security Reviewer, risk approver, release approver, or Baseline administrator.
+
+**Common issue:** an empty Agent list means the enrollment, repository binding, heartbeat, or project scope is incomplete. The enrollment code and Agent token must never enter source control.
+
+### Step 4E — Set the default operator
+
+Open **Project Configuration → Default operator**. This identity is a convenience default for review actions; it does not grant permissions.
+
+![Team default operator](assets/team/fine-grained/team-project-default-operator.png)
+
+1. Enter the person's name and email.
+2. Enter the job title or role and the approval role used by the Team workflow.
+3. Choose **Save default identity**.
+4. When confirming, ignoring, accepting risk, deferring risk, or recording verification, check the prefilled identity and edit it in the dialog when another authorized person is acting.
+
+**Result:** review dialogs start with a consistent operator identity and still retain an explicit per-action confirmation.
+
+**Common issue:** a default operator shown in the form is not proof that the account can approve the action. Permission comes from Team membership and the project policy.
+
+### Step 4F — Review analysis defaults
+
+Open **Project Configuration → Analysis defaults** before the first run. These are Team workflow defaults shown when an analysis is launched; they are not a replacement for the launch form or global Provider settings.
+
+![Team analysis defaults](assets/team/fine-grained/team-project-analysis-defaults.png)
+
+The current defaults are:
+
+| Analysis type | Default shown by the Team project |
+| --- | --- |
+| Baseline detection | Standard |
+| Iteration, code-change, and external-report analysis | Base Advanced |
+| AI provider and model | The global default provider and model |
+| Report language | The current interface or backend default |
+
+**Result:** each launch starts with predictable values, while the Analysis Center still displays the actual depth and assurance used by that run.
+
+**Common issue:** changing a global provider does not silently change a completed run. Reopen the launch form and check the effective values before starting a new analysis.
+
+### Step 4G — Review Policy Center
+
+Open **Project Overview → Policy Center** before creating release work. Policy Center defines the gates that later Findings, remediation tasks, CI evidence, and Baseline promotion must satisfy.
+
+![Team Policy Center](assets/team/fine-grained/team-policy-center.png)
+
+Review the policy version, the number of blocking checks, the **evidence-missing policy**, and whether **Pass with risk** is allowed. The visible controls include high/critical blocking, unverified-fix blocking, requiring a PR before marking a fix, requiring verification after a fix, requiring an expiry for accepted risk, requiring a target Iteration for deferred risk, and allowing Pass with risk.
+
+Also review the allowed test commands and forbidden command patterns. Save only after the security owner agrees with the change, then refresh the page and confirm the persisted policy. These rules constrain later Agent and CLI actions; they do not execute a scan by themselves.
+
+**Result:** the Team has an explicit release policy before analysis or remediation produces a decision.
+
+**Common issue:** a repair can be technically correct and still remain blocked when the policy requires a current PR, verification, owner approval, expiry, or Iteration link.
+
 <a id="team-object-map"></a>
 ### Understand Team objects before adding integrations
 
@@ -208,6 +336,10 @@ Example: `REQ-204` adds refund approval. The developer submits PR `#52` at commi
 7. Review the iteration timeline and diff.
 8. Correct the change binding before analysis if unrelated files or the wrong revision appear.
 
+![Team iteration creation gate](assets/team/fine-grained/team-iteration-create.png)
+
+If no ready Baseline exists, **Create iteration** remains disabled and the page explains that a ready Baseline must be created or selected first. Complete Baseline detection, wait for materialization, and return to Analysis Center before trying again. This gate prevents an Iteration from being attached to an unresolved starting revision.
+
 **Result:** the iteration contains the requirement and source change that the team intends to release.
 
 A **Change Set** is the specific source delta inside the Iteration. Creating an Iteration does not replace or promote the Baseline. After an accepted release, **Fresh Baseline Promotion** is the separate action that makes the released revision the next comparison point.
@@ -257,6 +389,62 @@ Requirement Extraction must preserve ambiguity and uncertainty when the source d
 ## Step 8 — Run requirement, impact, risk, and Finding analysis
 
 The following stages turn reviewed requirements and the Change Set into security context and reviewable Findings:
+
+### Step 8A — Select the Analysis Center context
+
+Open **Analysis Center** after the project and policy configuration is complete. Select both the Team Project and the Iteration shown in the context selectors. The page then exposes the current progress, input material, reviewed requirements, SCA, and run history for that context.
+
+![Team Analysis Center current progress](assets/team/fine-grained/team-analysis-center.png)
+
+The **Current progress** view tells you which run is active or most recent, its percentage, current stage, effective Audit depth, Model assurance, auditor/reviewer models, and the stages that have completed or are waiting. A cancelled or failed run can be resumed or retried from the displayed recovery point; it is not evidence that the final report is complete.
+
+### Step 8B — Choose the analysis type
+
+Choose **New analysis**. Select the card that matches the input you have; do not use Baseline detection for a change-only review.
+
+![Team New Analysis choices](assets/team/fine-grained/team-analysis-new-analysis.png)
+
+| Analysis type | Use it for |
+| --- | --- |
+| **Baseline detection** | Scan the current code state and create the initial Baseline, Findings, and report. |
+| **Update to next Baseline** | Promote the repaired and verified current state after the release decision. |
+| **Iteration analysis** | Analyze Iteration requirements, code changes, PRs, and patches from the current Baseline. |
+| **SCA component impact analysis** | Build component inventory, enrich advisories, analyze usage impact, review Owners, and prepare the release gate. |
+| **Code-change analysis** | Analyze only a selected branch range, commit range, Change Set, or PR/Patch. |
+| **External-report analysis** | Import SARIF/SAST results and normalize them against the Team Project context. |
+| **Requirement analysis** | Extract and analyze requirements from manual sources or configured connectors. |
+| **PR / Patch analysis** | Review one PR, MR, or patch as an incremental security change. |
+| **Fix verification** | Check a repair, its acceptance criteria, PR, and CI evidence against the current Finding. |
+
+Choose **Start / Configure** to open the next form. Before starting, verify the project, current Baseline, Iteration, Audit depth, Model assurance, Provider, and language. Starting a run is a state-changing action; the screenshot shows the choice screen and does not claim that a run was started.
+
+### Step 8C — Read the Analysis Center tabs
+
+The tabs are views into the same selected project and Iteration; they do not create separate projects.
+
+#### Inputs
+
+![Team Analysis Center inputs](assets/team/fine-grained/team-analysis-inputs.png)
+
+Use **Inputs** to check whether the Iteration has requirement documents, code changes, and external reports. Requirement documents are optional for a code-only baseline, while a requirement or Iteration analysis needs an active source. The page also exposes the configured default AI Provider when extraction requires one.
+
+#### Reviewed requirements
+
+![Team reviewed requirements](assets/team/fine-grained/team-analysis-requirement-review.png)
+
+Use **Reviewed requirements** to run extraction, inspect the counts for pending requirements, defects, unassigned Owners, and low-confidence items, then approve, edit, merge, split, reject, or mark an item as not a requirement. An empty state means no active requirement source has been added; it is not a successful extraction.
+
+#### Software Composition Analysis (SCA)
+
+![Team Analysis Center SCA](assets/team/fine-grained/team-analysis-sca.png)
+
+Use **SCA** to configure dependency rules and vulnerability sources, then move from component inventory to impact analysis, remediation, exceptions, rescanning, and release-gate evidence. The analysis depth and Model assurance selectors shown here control the SCA workflow; the page does not replace the Team policy gate. If the workspace is not selected or SCA is not configured, the page reports that state instead of inventing a result.
+
+#### Run history
+
+![Team Analysis Center run history](assets/team/fine-grained/team-analysis-history.png)
+
+Use **Run history** to compare previous run types, statuses, Audit depth values, and update times. A history row marked cancelled, failed, or needs attention must be resumed or retried before treating the associated report or Finding set as current.
 
 Run the stages in this order:
 
